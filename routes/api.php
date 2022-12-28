@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,10 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Auth::routes();
+
+Route::apiResource('produtor', App\Http\Controllers\API\ProdutorController::class);
+Route::apiResource('propriedade', App\Http\Controllers\API\PropriedadeController::class);
+Route::apiResource('usuario', App\Http\Controllers\API\UsuarioController::class);
+
