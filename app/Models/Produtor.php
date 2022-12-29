@@ -20,9 +20,9 @@ class Produtor extends Model
     {
         return $query->select(
             'produtors.*',
-            'people.nome',
-            'people.cpf_cnpj'
+            'pessoas.nome',
+            'pessoas.cpf_cnpj'
         )
-            ->join('pessoas', 'pessoas.id', '=', 'produtors.person_id');
+            ->join('pessoas', 'pessoas.id', '=', 'produtors.pessoa_id');
     }
 }

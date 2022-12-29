@@ -20,8 +20,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Auth::routes();
-
-Route::apiResource('produtor', App\Http\Controllers\API\ProdutorController::class);
-Route::apiResource('propriedade', App\Http\Controllers\API\PropriedadeController::class);
-Route::apiResource('usuario', App\Http\Controllers\API\UsuarioController::class);
-
+Route::group(["middleware" => ["auth:api"], "namespace" => "API"], function () {
+    Route::apiResource('produtor', 'API\ProdutorController');
+    Route::apiResource('propriedade', 'API\PropriedadeController');
+    Route::apiResource('usuario', 'API\UsuarioController');
+});

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class Usuario extends Model
 {
@@ -21,10 +20,10 @@ class Usuario extends Model
     {
         return $query->select(
             'usuarios.*',
-            'people.nome',
-            'people.cpf_cnpj'
+            'pessoas.nome',
+            'pessoas.cpf_cnpj'
         )
-            ->join('pessoas', 'pessoas.id', '=', 'usuarios.person_id');
+            ->join('pessoas', 'pessoas.id', '=', 'usuarios.pessoa_id');
     }
 
 }

@@ -73,8 +73,8 @@ class ProdutorController extends BaseController
 
     public function show($id)
     {
-        $item = Produtor::query()
-            ->where('id', $id)
+        $item = Produtor::person()
+            ->where('produtors.id', $id)
             ->firstOrFail();
 
         return $this->sendResponse($item);
