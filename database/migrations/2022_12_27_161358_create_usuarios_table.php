@@ -17,6 +17,7 @@ class CreateUsuariosTable extends Migration
             $table->bigIncrements('id');
             $table->integer('pessoa_id')->unsigned()->nullable()->index();
 			$table->foreign('pessoa_id')->references('id')->on('pessoas');
+            $table->string('nomeUsuario')->unique();
             $table->string('senhaUsuario');
             $table->rememberToken();
             $table->timestamps();

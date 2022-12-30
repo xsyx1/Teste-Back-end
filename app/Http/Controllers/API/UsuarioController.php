@@ -7,6 +7,7 @@ use App\Models\Pessoa;
 use App\Rules\CpfCnpj;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -49,13 +50,17 @@ class UsuarioController extends BaseController
                 );
 
                 $inputs['pessoa_id'] = $pessoa->id;
+                $inputs['nomeUsuario'] = $pessoa->nome;
                 $inputs['senhaUsuario'] = bcrypt($request->input('senhaUsuario'));
 
                 $user = Usuario::updateOrCreate(
                     ['pessoa_id' => $inputs['pessoa_id']],
                     $inputs
                 );
-                return $this->sendResponse($user, "Usuário criado com sucesso", 201);
+
+                $success['token'] =  $user->createToken('MyApp')->accessToken;
+                $success['name'] =  $user->nome;
+                return $this->sendResponse($success, "Usuário criado com sucesso", 201);
             });
         } catch (Exception $e) {
             return $this->sendError("", $e->getMessage(), 500);
@@ -84,6 +89,36 @@ class UsuarioController extends BaseController
             return $this->sendError("", "Você não tem permissão para excluir esse usuario", 404);
         }
     }
+
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nomeUsuario' => 'required',
+            'senhaUsuario' => 'required'
+        ]);
+
+
+        if ($validator->fails()) {
+            return $this->sendError('Erro de validação', $validator->errors()->toArray(), 422);
+        }
+
+        $inputs = $request->all();
+
+        $find = Usuario::where('nomeUsuario', $inputs['nomeUsuario'])->first();
+        if (\Hash::check($inputs['senhaUsuario'], $find->senhaUsuario))
+        {
+            $token = $find->createToken(config('app.key'));
+
+            return $this->sendResponse([
+                'user' => $find->nomeUsuario,
+                'token' => $token->accessToken
+            ], "Login successfully.");
+        } else {
+            return $this->sendError('Usuario ou senha inválidos', [], 401);
+        }
+
+    }
+
 
     private function rules(Request $request, $primaryKey = null, bool $changeMessages = false)
     {

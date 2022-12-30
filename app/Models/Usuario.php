@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 
-class Usuario extends Model
+class Usuario extends Authenticatable
 {
+    use HasApiTokens, Notifiable;
+
     protected $fillable = [
-        'pessoa_id', 'senhaUsuario',
+        'pessoa_id', 'nomeUsuario', 'senhaUsuario',
     ];
 
     //relacionamento com a tabela de pessoa
